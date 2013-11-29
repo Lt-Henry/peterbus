@@ -227,3 +227,36 @@ void pb_write(unsigned char out_id,unsigned char out_len,unsigned char * out_buf
 }
 
 
+
+PeterBus::PeterBus(int size_tx,unsigned char * buff_tx,int size_rx,unsigned char * buffer_rx);
+{
+	tx = buff_tx;
+	rx = buff_rx;
+	this->size_tx=size_tx;
+	this->size_rx=size_rx;
+}
+
+void PeterBus::BeginTx(unsigned char id)
+{
+	
+}
+
+void PeterBus::PushInt8(unsigned char v)
+{
+	
+}
+
+void PeterBus::PushInt16(int v)
+{
+	
+}
+
+void PeterBus::PushInt32(long v)
+{
+	
+}
+
+int PeterBus::EndTx()
+{
+	
+}

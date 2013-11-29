@@ -2,16 +2,23 @@
 #ifndef _PETERBUS_
 #define _PETERBUS_
 
-
-
-void pb_init();
-void pb_close();
-
-bool pb_read(unsigned char * id,unsigned char * len,unsigned char * in_buffer);
-void pb_write(unsigned char id,unsigned char len,unsigned char * out_buffer);
+class PeterBus
+{
+	public:
 	
-void pb_push_rx(unsigned char data);
-void pb_push_tx(unsigned char data);
-bool pb_frame_available();
+	unsigned char * tx;
+	unsigned char * rx;
+	int size_tx;
+	int size_rx;
+	
+	PeterBus(int size_tx,unsigned char * buff_tx,int size_rx,unsigned char * buffer_rx);
+	
+	void BeginTx(unsigned char id);
+	void PushInt8(unsigned char v);
+	void PushInt16(int v);
+	void PushInt32(long v);
+	void PushFloat(float v);
+	int EndTx();
+};
 
 #endif
