@@ -6,19 +6,19 @@ class PeterBus
 {
 	public:
 	
-	unsigned char * tx;
-	unsigned char * rx;
-	int size_tx;
-	int size_rx;
+	unsigned char  tx[28];
+	unsigned char  rx[28];
+	unsigned char tx_size;
+	unsigned char tx_pos;
 	
-	PeterBus(int size_tx,unsigned char * buff_tx,int size_rx,unsigned char * buffer_rx);
+	PeterBus();
 	
 	void BeginTx(unsigned char id);
 	void PushInt8(unsigned char v);
 	void PushInt16(int v);
 	void PushInt32(long v);
 	void PushFloat(float v);
-	int EndTx();
+	void EndTx();
 };
 
 #endif

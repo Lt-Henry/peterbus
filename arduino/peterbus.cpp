@@ -228,35 +228,61 @@ void pb_write(unsigned char out_id,unsigned char out_len,unsigned char * out_buf
 
 
 
-PeterBus::PeterBus(int size_tx,unsigned char * buff_tx,int size_rx,unsigned char * buffer_rx);
+PeterBus::PeterBus();
 {
-	tx = buff_tx;
-	rx = buff_rx;
-	this->size_tx=size_tx;
-	this->size_rx=size_rx;
+	tx_size=0;
+	tx_pos=0;
 }
 
 void PeterBus::BeginTx(unsigned char id)
 {
+	tx_size=0;
+	tx_pos=3;
+	
+	/* header */
+	tx[0]=0x7e;
+	
+	/* id */
+	tx[1]=id;
+	
+	/* length (will be filled later) */
+	tx[2]=0x00;
 	
 }
 
 void PeterBus::PushInt8(unsigned char v)
 {
-	
+	tx[tx_pos]=v;
+	tx_pos++;
+	tx_size++;
 }
 
 void PeterBus::PushInt16(int v)
 {
-	
+	tx[tx_pos]=0x00FF & v;
+	tx[tx_pos+1]=(0xFF00 & v)>>8;
+	tx_pos+=2;
+	tx_size+=2;
 }
 
 void PeterBus::PushInt32(long v)
+{
+	tx[tx_pos]=0x000000FF & v;
+	tx[tx_pos+1]=(0x0000FF00 & v)>>8;
+	tx[tx_pos+2]=(0x00FF0000 & v)>>16;
+	tx[tx_pos+3]=(0xFF000000 & v)>>24;
+	
+	tx_pos+=4;
+	tx_size+=4;
+}
+
+void PeterBus::PushFloat(float v)
 {
 	
 }
 
 int PeterBus::EndTx()
 {
-	
+	tx[2]=tx_size;
+	tx[tx_pos]=0; /* cheksum here */
 }
