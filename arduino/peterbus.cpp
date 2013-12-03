@@ -278,11 +278,29 @@ void PeterBus::PushInt32(long v)
 
 void PeterBus::PushFloat(float v)
 {
+	long * w = (long *)&v;
 	
+	tx[tx_pos]=0x000000FF & *w;
+	tx[tx_pos+1]=(0x0000FF00 & *w)>>8;
+	tx[tx_pos+2]=(0x00FF0000 & *w)>>16;
+	tx[tx_pos+3]=(0xFF000000 & *w)>>24;
+		
+	tx_pos+=4;
+	tx_size+=4;
 }
 
 int PeterBus::EndTx()
 {
+	unsigned char checksum = 0;
+	unsigned char n;
+	
 	tx[2]=tx_size;
-	tx[tx_pos]=0; /* cheksum here */
+	
+	for(n=0;n<tx_size;n++)
+	{
+		checksum = checksum ^ tx[3+n];
+	}
+	
+	
+	tx[tx_pos]=checksum; /* cheksum here */
 }
