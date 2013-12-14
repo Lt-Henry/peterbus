@@ -303,4 +303,55 @@ int PeterBus::EndTx()
 	
 	
 	tx[tx_pos]=checksum; /* cheksum here */
+	
+	tx_escape=false;
+	tx_pop=0;
+}
+
+bool PeterBus::IsTxAvailable()
+{
+	return(tx_pop<=tx_pos);
+}
+
+unsigned char PeterBus::PopTx()
+{
+	unsigned char tmp;
+	
+	/* header */
+	if(tx_pop==0)
+	{
+		tmp=tx[tx_pop];
+		tx_pop++;
+		return tmp;
+	}
+	else /* conventional data */
+	{
+		if(tx_escape==true)
+		{
+			tmp=tx[tx_pop];
+			tx_pop++;
+			tx_escape=false;
+			return 0x20 ^ tmp;
+		}
+		else
+		{
+			tmp=tx[tx_pop];
+				
+			if(tmp==0x7d || tmp==0x7e)
+			{
+				tx_escape=true;
+				return 0x7d;
+			}
+		}
+	}
+}
+
+void PeterBus::PushRx(unsigned char v)
+{
+
+}
+
+bool Peterus::IsRxFrame()
+{
+
 }
