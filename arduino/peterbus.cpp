@@ -232,6 +232,11 @@ PeterBus::PeterBus();
 {
 	tx_size=0;
 	tx_pos=0;
+	
+	rx_pos=0;
+	rx_size=0;
+	
+	rx_status=0;
 }
 
 void PeterBus::BeginTx(unsigned char id)
@@ -348,10 +353,119 @@ unsigned char PeterBus::PopTx()
 
 void PeterBus::PushRx(unsigned char v)
 {
-
+	if(rx_state!=0)
+	{
+		/* unexpected header, reset state */
+		if(v==0x7e)
+		{
+			rx_state=0;
+			rx_pos=0;
+		}
+		
+		/* escape character */
+		if(v==0x7d)
+		{
+			rx_escape=true;
+			return;
+		}
+	}
+	
+	if(rx_escape)
+	{
+		v = v * 0x20;
+	}
+	
+	switch(rx_state)
+	{
+		/* expecting a header */
+		case 0:
+			if(v==0x7e)
+			{
+				rx_state=1;
+				rx[rx_pos]=v;
+				rx_pos++;
+			}
+		break;
+		
+		/* expecting a id */
+		case 1:
+			rx_state=2;
+			rx[rx_pos]=v;
+			rx_pos++;
+		break;
+		
+		/* expecting size */
+		case 2:
+			rx_state=3;
+			rx[rx_pos]=v;
+			rx_pos++;
+		break;
+		
+		/* expecting data */
+		case 3:
+		
+		break;
+		
+		/* expecting checksum */
+		case 4:
+		
+		break;
+	}
+	
 }
 
 bool Peterus::IsRxFrame()
 {
 
+}
+
+unsigned char BeginRx()
+{
+	rx_pop=3;
+	return rx[1]; /* msg id */
+}
+
+unsigned char PopInt8()
+{
+	unsigned char tmp;
+	tmp = rx[rx_pop];
+	
+	rx_pop++;
+	return tmp;
+}
+
+int PopInt16()
+{
+	int * tmp;
+	
+	tmp = (int *)(rx + rx_pop);
+	
+	rx_pop+=2;
+	return *tmp;
+}
+
+long PopInt32()
+{
+	long * tmp;
+	
+	tmp = (long *)(rx + rx_pop);
+	
+	rx_pop+=4;
+	return *tmp;
+
+}
+
+float PopFloat()
+{
+	float * tmp;
+	
+	tmp = (float *)(rx + rx_pop);
+	
+	rx_pop+=2;
+	return *tmp;
+
+}
+
+void EndRx()
+{
 }

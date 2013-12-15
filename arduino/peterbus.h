@@ -17,7 +17,9 @@ class PeterBus
 	unsigned char rx_size;
 	unsigned char rx_pos;
 	
+	unsigned char rx_pop;
 	bool rx_escape;
+	unsigned char rx_status;
 	
 	PeterBus();
 	
@@ -33,6 +35,13 @@ class PeterBus
 	
 	void PushRx(unsigned char v);
 	bool IsRxFrame();
+	
+	unsigned char BeginRx();
+	unsigned char PopInt8();
+	int PopInt16();
+	long PopInt32();
+	float PopFloat();
+	void EndRx();
 };
 
 #endif
