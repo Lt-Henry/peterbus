@@ -1,0 +1,45 @@
+
+
+arduino TX
+--------
+/* create PeterBus object */
+pb PeterBus();
+
+/* creates a TX packet with id 0x02 */
+pb.BeginTx(0x02);
+
+/* pushes a int8 and a float into the packet */
+pb.PushInt8(0x10);
+pb.PushFloat(3.2f);
+
+/* finish the packet */
+pb.EndTx();
+
+/* while still data available, we pop the tx frame and send it over the serial line */
+while(pb.IsTxAvailable())
+{
+	Serial1.write(pb.PopTx());
+}
+
+arduino RX
+--------
+
+pb PeterBus();
+
+while(Serial1.available())
+{
+	pb.PushRx(Serial1.read());
+	
+	if(pb.IsRxFrame())
+	{
+		unsigned char id = pb.BeginRx();
+		
+		if(id==0x02)
+		{
+			unsigned char value1 = pb.PopInt8();
+			float value2 = pb.PopFloat();	
+		}
+		
+		pb.EndRx();
+	}
+}
