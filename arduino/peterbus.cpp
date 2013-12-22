@@ -414,18 +414,18 @@ void PeterBus::PushRx(unsigned char v)
 	
 }
 
-bool Peterus::IsRxFrame()
+bool PeterBus::IsRxFrame()
 {
 
 }
 
-unsigned char BeginRx()
+unsigned char PeterBus::BeginRx()
 {
 	rx_pop=3;
 	return rx[1]; /* msg id */
 }
 
-unsigned char PopInt8()
+unsigned char PeterBus::PopInt8()
 {
 	unsigned char tmp;
 	tmp = rx[rx_pop];
@@ -434,7 +434,7 @@ unsigned char PopInt8()
 	return tmp;
 }
 
-int PopInt16()
+int PeterBus::PopInt16()
 {
 	int * tmp;
 	
@@ -444,7 +444,7 @@ int PopInt16()
 	return *tmp;
 }
 
-long PopInt32()
+long PeterBus::PopInt32()
 {
 	long * tmp;
 	
@@ -455,7 +455,7 @@ long PopInt32()
 
 }
 
-float PopFloat()
+float PeterBus::PopFloat()
 {
 	float * tmp;
 	
@@ -466,6 +466,6 @@ float PopFloat()
 
 }
 
-void EndRx()
+void PeterBus::EndRx()
 {
 }
