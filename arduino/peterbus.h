@@ -4,7 +4,7 @@
 
 class PeterBus
 {
-	public:
+	private:
 	
 	unsigned char  tx[28];
 	unsigned char  rx[28];
@@ -19,7 +19,11 @@ class PeterBus
 	
 	unsigned char rx_pop;
 	bool rx_escape;
-	unsigned char rx_status;
+	unsigned char rx_state;
+	
+	unsigned char rx_checksum;
+	
+	public:
 	
 	PeterBus();
 	
