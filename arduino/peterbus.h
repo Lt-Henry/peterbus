@@ -4,7 +4,7 @@
 
 class PeterBus
 {
-	private:
+	public:
 	
 	unsigned char  tx[28];
 	unsigned char  rx[28];
@@ -23,7 +23,7 @@ class PeterBus
 	
 	unsigned char rx_checksum;
 	
-	public:
+	
 	
 	PeterBus();
 	
@@ -34,7 +34,7 @@ class PeterBus
 	void PushFloat(float v);
 	void EndTx();
 	
-	bool IsTxAvailabe();
+	bool IsTxAvailable();
 	unsigned char PopTx();
 	
 	void PushRx(unsigned char v);

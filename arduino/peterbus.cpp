@@ -5,7 +5,7 @@
 
 
 
-PeterBus::PeterBus();
+PeterBus::PeterBus()
 {
 	tx_size=0;
 	tx_pos=0;
@@ -13,7 +13,7 @@ PeterBus::PeterBus();
 	rx_pos=0;
 	rx_size=0;
 	
-	rx_status=0;
+	rx_state=0;
 }
 
 void PeterBus::BeginTx(unsigned char id)
@@ -71,7 +71,7 @@ void PeterBus::PushFloat(float v)
 	tx_size+=4;
 }
 
-int PeterBus::EndTx()
+void PeterBus::EndTx()
 {
 	unsigned char checksum = 0;
 	unsigned char n;
@@ -123,6 +123,11 @@ unsigned char PeterBus::PopTx()
 			{
 				tx_escape=true;
 				return 0x7d;
+			}
+			else
+			{
+				tx_pop++;
+				return tmp;
 			}
 		}
 	}
