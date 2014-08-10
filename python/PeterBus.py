@@ -1,18 +1,18 @@
 
 class PeterBus:
 
-    def __init__(self):
-        self.tx = [0] * 28
-        self.ty = [0] * 28
-        
-        self.tx_size=0
+	def __init__(self):
+		self.tx = [0] * 28
+		self.ty = [0] * 28
+
+		self.tx_size=0
 		self.tx_pos=0
 		
 		self.tx_escape=False
 		self.tx_pop=0
 
-    
-    def begin_tx(self,id):
+
+	def begin_tx(self,id):
 		self.tx[0]=0x7e
 		self.tx[1]=id
 		self.tx[2]=0
@@ -29,7 +29,9 @@ class PeterBus:
 		
 		
 	def end_tx(self):
-		checksum = 0
+		
+		self.tx[2]=self.tx_size
+		checksum = self.tx[1] ^ self.tx[2]
 		
 		for n in range(self.tx_size):
 			checksum = checksum ^ self.tx[3+n]
@@ -71,4 +73,6 @@ class PeterBus:
 				if(tmp==0x7d or tmp==0x7e):
 					self.tx_escape=True
 					return 0x7d
-		
+				else:
+					self.tx_pop=self.tx_pop+1
+					return tmp

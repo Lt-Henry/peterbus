@@ -22,6 +22,7 @@ class PeterBus
 	unsigned char rx_state;
 	
 	unsigned char rx_checksum;
+	bool checksum_ok;
 	
 	
 	

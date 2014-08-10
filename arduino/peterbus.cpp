@@ -169,6 +169,9 @@ void PeterBus::PushRx(unsigned char v)
 				rx_state=1;
 				rx[rx_pos]=v;
 				rx_pos++;
+				
+				checksum_ok=false;
+				Serial.println("Header");
 			}
 		break;
 		
@@ -177,6 +180,7 @@ void PeterBus::PushRx(unsigned char v)
 			rx_state=2;
 			rx[rx_pos]=v;
 			rx_pos++;
+			Serial.println("Id");
 		break;
 		
 		/* expecting size */
@@ -188,6 +192,7 @@ void PeterBus::PushRx(unsigned char v)
 			/* maybe we should check for invalid frame sizes */
 			
 			rx_checksum=rx[1] ^ rx[2]; /* init checksum with id and size */
+			Serial.println("Size");
 			
 		break;
 		
@@ -202,13 +207,15 @@ void PeterBus::PushRx(unsigned char v)
 			{
 				rx_state=4;
 			}
+			Serial.println("Data");
 		
 		break;
 		
 		/* expecting checksum */
 		case 4:
 			rx[rx_pos]=v;
-						
+			checksum_ok=(v==rx_checksum);
+			if(!checksum_ok)Serial.println("Invalid checksum");
 			rx_state=0;			
 			
 		break;
@@ -218,7 +225,7 @@ void PeterBus::PushRx(unsigned char v)
 
 bool PeterBus::IsRxFrame()
 {
-	return (rx[2+rx_size+1]==rx_checksum);
+	return checksum_ok;
 	
 }
 
